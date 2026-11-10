@@ -1,52 +1,79 @@
-{% comment %}
-  This section is used in the product template to render product page with
-  media, content, and add-to-cart form.
+<div class="max-w-7xl mx-auto px-4 py-12">
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-12">
+    
+    <!-- Product Media Left Column -->
+    <div class="bg-white rounded-xl shadow-sm border border-slate-100 overflow-hidden h-fit">
+      {% if product.featured_image %}
+        <img src="{{ product.featured_image | img_url: '1024x1024' }}" alt="{{ product.title }}" class="w-full h-auto object-cover" />
+      {% else %}
+        {{ 'product-1' | placeholder_svg_tag: 'w-full h-auto object-cover bg-slate-200' }}
+      {% endif %}
+    </div>
 
-  https://shopify.dev/docs/storefronts/themes/architecture/templates/product
-{% endcomment %}
+    <!-- Product Details Right Column -->
+    <div class="flex flex-col space-y-4">
 
-<div class="product-images">
-  {% for image in product.images %}
-    {% render 'image', class: 'product-image', image: image %}
-  {% endfor %}
-</div>
+      <!-- The Add TO Cart Form -->
+      {% form 'product', product, id: 'product-form', novalidate: 'novalidate' %}
+        
+        <!-- Hidden input identifying the specific variant being added -->
+        <input type="hidden" name="id" value="{{ product.selected_or_first_available_variant.id }}" />
 
-<div class="product-info">
-  <h1>{{ product.title }}</h1>
-  <p>{{ product.price | money }}</p>
-  <p>{{ product.description }}</p>
-</div>
+        {% for block in section.blocks %}
+          {% case block.type %}
+            
+          {% when 'vendor' %}
+            <p class="text-sm text-gray-500 uppercase tracking-widest font-semibold" {{ block.shopify_attributes }}>
+              {{ product.vendor }}
+            </p>
 
-<div class="product-form">
-  {% form 'product', product %}
-    {% assign current_variant = product.selected_or_first_available_variant %}
+          {% when 'title' %}
+            <h1 class="text-4xl font-extrabold text-slate-900" {{ block.shopify_attributes }}>
+              {{ product.title }}
+            </h1>
 
-    <select name="id">
-      {% for variant in product.variants %}
-        <option
-          value="{{ variant.id }}"
-          {% if variant == current_variant %}
-            selected="selected"
-          {% endif %}
-        >
-          {{ variant.title }} - {{ variant.price | money }}
-        </option>
-      {% endfor %}
-    </select>
+          {% when 'price' %}
+            <div class="text-2xl text-slate-700 font-semibold" {{ block.shopify_attributes }}>
+              {{ product.price | money }}
+            </div>
 
-    <input type="text" name="quantity" min="1" value="1">
+          {% when 'quantity_selector' %}
+          <div class="flex flex-col space-y-2 mt-4" {{ block.shopify_attributes }}>
+            <label for="Quantity-{{ section.id }}" class="text-sm font-medium text-slate-700"></label>
+            <input type="number" name="quantity" id="Quantity-{{ section.id }}" value="1" min="1" class="w-24 border border-slate-300 rounded-md px-3 py-2 text-center focus:outline-none focus:ring-2 focus:ring-blue-500" />
+          </div>
 
-    <input type="submit" value="Add to cart">
-    {{ form | payment_button }}
-  {% endform %}
+          {% when 'buy_buttons' %}
+            <div class="pt-6">
+              <button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium px-6 py-4 transition-colors text-lg shadow-sm">
+                Add to cart
+              </button>
+            </div>
+
+          {% when 'description' %}
+            <div class="mt-8 text-slate-600 leading-relaxed space-y-4" {{ block.shopify_attributes }}>
+              {{ product.description }}
+            </div>
+              
+          {% endcase %}
+        {% endfor %}
+
+      {% endform %}
+    </div>
+
+  </div>
 </div>
 
 {% schema %}
-{
-  "name": "t:general.product",
-  "settings": [],
-  "disabled_on": {
-    "groups": ["header", "footer"]
+  {
+    "name": "Product Information",
+    "blocks": [
+      { "type": "vendor", "name": "Vendor", "limit": 1 },
+      { "type": "title", "name": "Title", "limit": 1 },
+      { "type": "price", "name": "Price`", "limit": 1 },
+      { "type": "quantity_selector", "name": "Quantity Selector", "limit": 1 },
+      { "type": "buy_buttons", "name": "Buy Buttons", "limit": 1 },
+      { "type": "description", "name": "Description", "limit": 1 },
+    ]
   }
-}
 {% endschema %}

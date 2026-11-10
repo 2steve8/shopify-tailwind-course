@@ -1,47 +1,58 @@
-{% comment %}
-  This section is used in the collection template to render collection page
-  listing all products within a collection.
+{% paginate collection.products by section.settings.products_per_page %}
+  <div class="max-w-7xl mx-auto px-4 py-12">
 
-  https://shopify.dev/docs/storefronts/themes/architecture/templates/collection
-{% endcomment %}
-
-<h1>{{ collection.title }}</h1>
-
-<div class="collection-products">
-  {% paginate collection.products by 20 %}
-    {% for product in collection.products %}
-      <div class="collection-product">
-        {% if product.featured_image %}
-          {% render 'image',
-            class: 'collection-product__image',
-            image: product.featured_image,
-            url: product.url,
-            width: 400,
-            height: 400,
-            crop: 'center'
-          %}
-        {% endif %}
-        <div class="collection-product__content">
-          <p>{{ product.title | escape | link_to: product.url }}</p>
-          <p>{{ product.price | money }}</p>
+    <!-- Collection Header -->
+    <div class="text-center mb-12">
+      <h1 class="text-4xl font-extrabold text-slate-900 mb-4">{{ collection.title }}</h1>
+      {% if collection.description != blank %}
+        <div class="text-lg text-gray-500 max-w-2xl mx-auto">
+          {{ collection.description }}
         </div>
+      {% endif %}
+    </div>
+
+    <!-- Product Grid -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+      {% for product in collection.products %}
+        
+        <!-- Injecting the snippet here -->
+        {% render 'product-card', product: product %}
+
+      {% else %}
+        <p class="text-center col-span-full text-gray-500 text-lg py-12">No products found in this collection.</p>
+      {% endfor %}
+    </div>
+
+    <!-- Pagination -->
+    {% if paginate.pages > 1 %}
+      <div class="flex justify-center mt-16 space-x-4">
+        {% if paginate.previous %}
+          <a href="{{ paginate.previous.url }}" class="px-5 py-2 bg-white border border-slate-900 hover:text-blue-600 rounded-md text-slate-800 font-medium transition-colors">&larr; Previous</a>
+        {% endif %}
+
+        {% if paginate.next %}
+          <a href="{{ paginate.next.url }}" class="px-5 py-2 bg-white border border-slate-900 hover:text-blue-600 rounded-md text-slate-800 font-medium transition-colors">Next &rarr;</a>
+        {% endif %}
       </div>
-    {% endfor %}
+    {% endif %}
 
-    {{ paginate | default_pagination }}
-  {% endpaginate %}
-</div>
-
-{% stylesheet %}
-  .collection-products {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(500px, 1fr));
-  }
-{% endstylesheet %}
+  </div>
+{% endpaginate %}
 
 {% schema %}
-{
-  "name": "t:general.collection",
-  "settings": []
-}
+  {
+    "name": "Collection Page",
+    "class": "product_per_page",
+    "settings": [
+      {
+        "type": "range",
+        "id": "products_per_page",
+        "min": 4,
+        "max": 24,
+        "step": 4,
+        "default": 12,
+        "label": "Products Per page"
+      }
+    ]
+  }
 {% endschema %}
