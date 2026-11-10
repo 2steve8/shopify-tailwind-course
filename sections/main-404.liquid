@@ -1,0 +1,41 @@
+<div class="max-w-3xl mx-auto px-4 py-24 text-center">
+
+    <h1 class="text-6xl font-extrabold text-slate-900 tracking-tight mb-4">
+        {{ section.settings.title }}
+    </h1>
+
+    <p class="text-lg text-gray-500 mb-8">
+        {{ section.settings.subtext }}
+    </p>
+
+    <a href="{{ routes.all_products_collection_url }}" class="inline-block bg-blue-600 hover:bg-blue-700 text-white font-medium px-6 py-3 rounded-md transition-colors">
+        {{ section.settings.button_label }}
+    </a>
+
+</div>
+
+{% schema %}
+{
+    "name": "404 Page",
+    "settings": [
+        {
+            "type": "text",
+            "id": "title",
+            "label": "Heading",
+            "default": "404"
+        },
+        {
+            "type": "text",
+            "id": "subtext",
+            "label": "Subtext",
+            "default": "The page you're looking for cannot be found."
+        },
+        {
+            "type": "text",
+            "id": "button_label",
+            "label": "Button Label",
+            "default": "Continue Shopping"
+        }
+    ]
+}
+{% endschema %}
