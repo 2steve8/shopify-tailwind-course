@@ -679,6 +679,10 @@ video {
   height: fit-content;
 }
 
+.h-20 {
+  height: 5rem;
+}
+
 .w-4 {
   width: 1rem;
 }
@@ -1264,5 +1268,9 @@ video {
 
   .lg\:grid-cols-8 {
     grid-template-columns: repeat(8, minmax(0, 1fr));
+  }
+
+  .lg\:flex-row {
+    flex-direction: row;
   }
 }
