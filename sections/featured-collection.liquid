@@ -1,0 +1,77 @@
+<div class="max-w-7xl mx-auto px-4 py-16">
+
+    <!-- Section Header -->
+    <div class="flex justify-between items-end mb-8">
+        <h2 class="text-3xl font-extrabold text-slate-900">{{ section.settings.title }}</h2>
+
+        <!-- Only show 'View All' if a collection is actually selected -->
+        {% if section.settings.collection != blank %}
+            <a href="{{ collections[section.settings.collection].url }}" class="text-blue-600 font-medium hover:underline transition-colors">
+                View All &rarr;
+            </a>
+        {% endif %}
+    </div>
+
+    <!-- Product Grid -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+
+        {% if section.settings.collection != blank %}
+            <!-- Loop through the selected collection and limit the output -->
+            {% for product in collections[section.settings.collection].products limit: section.settings.product_to_show %}
+                
+                <!-- Reuse the snippet built in Module 7 -->
+                {% render 'product-card', product: product %}
+
+            {% else %}
+                <p class="text-gray-500 col-span-full">No products found in this collection.</p>       
+            {% endfor %}
+
+        {% else %}
+          <!-- Empty State: Show placeholders if the merchant hasn't picked a collection yet -->
+          {% for i in (1..4) %}
+            <div class="bg-white rounded-xl shadow-sm border border-slate-100 overflow-hidden flex flex-col h-full">
+                {{ 'product' | append: i | placeholder_svg_tag: 'w-full h-64 object-cover bg-slate-200' }}
+                <div class="p-5">
+                    <h3 class="text-lg font-bold text-slate-900 mg2">Example Product</h3>
+                    <p class="text-slate-600 font-semibold">$19.99</p>
+                </div>
+            </div>
+          {% endfor %}
+        {% endif %}
+    
+    </div>
+</div>
+
+{% schema %}
+    {
+        "name": "Featured Collection",
+        "settings": [
+            {
+                "type": "text",
+                "id": "title",
+                "label": "Heading",
+                "default": "Featured Collection"
+            },
+            {
+                "type": "collection",
+                "id": "collection",
+                "label": "Collection to display"
+            },
+            {
+                "type": "range",
+                "id": "products_to_show",
+                "min": 4,
+                "max": 12,
+                "step": 4,
+                "default": 4,
+                "label": "Maximumproducts to show"
+            }
+        ],
+        "presets": [
+            {
+                "name": "Featured Collection",
+                "category": "Collection"
+            }
+        ]
+    }
+{% endschema %}
