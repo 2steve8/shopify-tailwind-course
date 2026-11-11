@@ -15,7 +15,7 @@
         "title": "Welcome to our store",
         "subtext": "Discover our latest products and exclusive offers.",
         "button_label": "Shop Now",
-        "button_link": "shopify://collections"
+        "button_link": "shopify://collections/all"
       }
     }
   },
