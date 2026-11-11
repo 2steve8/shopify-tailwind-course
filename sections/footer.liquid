@@ -1,57 +1,55 @@
-<footer>
-  <div class="footer__copyright">
-    &copy;
-    {{ 'now' | date: '%Y' }}
-    {{ shop.name | link_to: routes.root_url }}, {{ powered_by_link }}
-  </div>
+<footer class="bg-slate-900 text-gray-300 py-12 mt-20 border-t border-slate-900">
+  <div class="max-w-7xl mx-auto px-4 grid grid-cols-1 md:grid-cols-3 gap-12">
 
-  <div class="footer__links">
-    {% for link in section.settings.menu.links %}
-      {{ link.title | link_to: link.url }}
-    {% endfor %}
-  </div>
+    <!-- Column 1: Store Information -->
+    <div>
+      <h3 class="text-xl font-bold text-white mb-4">{{ shop.name }}</h3>
+      <p class="text-sm text-gray-400 leading-relaxed">
+        {{ section.settings.store_decription }}
+      </p>
+    </div>
 
-  <div class="footer__payment">
-    {% if section.settings.show_payment_icons %}
-      {% for type in shop.enabled_payment_types %}
-        {{ type | payment_type_svg_tag }}
-      {% endfor %}
-    {% endif %}
+    <!-- Column 2: Quick Links -->
+    <div>
+      <h3 class="text-lg font-bold text-white mb-4">Quick Links</h3>
+      <ul class="space-y-3">
+        {% for link in linklists[section.settings.footer_menu].links %}
+          <a href="{{ link.url }}" class="hover:text-blue-400 transition-colors text-sm">{{ link.title }}</a>
+        {% endfor %}
+      </ul>
+    </div>
+
+    <!-- Column 3: Copyright & Legal -->
+    <div>
+      <h3 class="text-lg font-bold text-white mb-4">Legal</h3>
+      <p class="text-sm text-gray-400 mb-4">
+        &copy; {{ 'now' | date: "%Y" }} {{ shop.name }}. All rights reserved
+      </p>
+      <!-- The standard "Powered by Shopify link" -->
+      <div class="text-xs text-slate-600 hover:text-slate-400 transition-colors">
+        {{ powered_by_link }}
+      </div>
+    </div>
+
   </div>
 </footer>
 
-{% stylesheet %}
-  footer {
-    display: flex;
-    justify-content: space-between;
-    margin-top: 2rem;
-  }
-  footer a {
-    text-decoration: none;
-    color: var(--color-foreground);
-  }
-  footer .footer__links,
-  footer .footer__payment {
-    display: flex;
-    gap: 1rem;
-  }
-{% endstylesheet %}
-
 {% schema %}
-{
-  "name": "t:general.footer",
-  "settings": [
-    {
-      "type": "link_list",
-      "id": "menu",
-      "label": "t:labels.menu"
-    },
-    {
-      "type": "checkbox",
-      "id": "show_payment_icons",
-      "label": "t:labels.show_payment_icons",
-      "default": true
-    }
-  ]
-}
+  {
+    "name": "Footer",
+    "settings": [
+      {
+        "type": "textarea",
+        "id": "store_description",
+        "label": "Store Description",
+        "default": "Providing high-quality gear for your next adventure. Based in San Mateo, shipping worldwide"
+      },
+      {
+        "type": "link_list",
+        "id": "footer_menu",
+        "label": "Footer Menu",
+        "default": "footer"
+      }
+    ]
+  }
 {% endschema %}
