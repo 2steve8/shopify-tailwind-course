@@ -11,7 +11,12 @@
   "sections": {
     "main": {
       "type": "hello-world",
-      "settings": {}
+      "settings": {
+        "title": "Welcome to our store",
+        "subtext": "Discover our latest products and exclusive offers.",
+        "button_label": "Shop Now",
+        "button_link": "shopify://collections"
+      }
     }
   },
   "order": [
