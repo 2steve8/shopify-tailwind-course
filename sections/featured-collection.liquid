@@ -17,7 +17,7 @@
 
         {% if section.settings.collection != blank %}
             <!-- Loop through the selected collection and limit the output -->
-            {% for product in collections[section.settings.collection].products limit: section.settings.product_to_show %}
+            {% for product in collections[section.settings.collection].products limit: section.settings.products_to_show %}
                 
                 <!-- Reuse the snippet built in Module 7 -->
                 {% render 'product-card', product: product %}
@@ -64,7 +64,7 @@
                 "max": 12,
                 "step": 4,
                 "default": 4,
-                "label": "Maximumproducts to show"
+                "label": "Maximum products to show"
             }
         ],
         "presets": [
